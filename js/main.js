@@ -1,6 +1,5 @@
 require([
-    'jquery',
     'views/app'
-], function($, App) {
+], function(App) {
     new App();
 });

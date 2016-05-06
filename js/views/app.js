@@ -2,14 +2,16 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'collections/transactions'
-], function($, _, Backbone, Transactions) {
+    'collections/transactions',
+    './virtualScroll'
+], function($, _, Backbone, Transactions, VirtualScroll) {
     'use strict';
 
     var App = Backbone.View.extend({
         el: $('#app'),
         initialize: function() {
             this.data = new Transactions(this.demoData());
+            new VirtualScroll(this.$el, this.data)
         },
         demoData: function() {
             var list = [];
