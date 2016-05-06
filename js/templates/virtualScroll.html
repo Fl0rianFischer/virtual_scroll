@@ -1,1 +1,7 @@
-<h1></h1>
+<ul>
+    <% _.each(visibleItems, function(item) { %>
+        <li>
+            <span><%= item.itemId %></span>
+        </li>
+    <% }); %> 
+</ul>
