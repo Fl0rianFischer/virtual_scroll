@@ -30,7 +30,10 @@ define([
         _setScroller: function(h) {
             // Virtual height      
             this.$el.height(h);
-            this.$container.css('position', 'relative');
+            this.$container.css({
+                'position': 'relative',
+                'overflow-y': 'scroll'
+            });
             (this.containerHeight) ? this.$container.height(this.containerHeight) : '';
             (this.$container.width) ? this.$container.width(this.containerWidth) : '';
         },
@@ -49,7 +52,7 @@ define([
             _.each(toAdd, function(item, i) {
                 var $item = $(new ListItem({model: item}).render().el);
                 $item.height(self.rowHeight);
-                $fragment.append($item)
+                $fragment.append($item);
             });
 
             this.current = visibleItems;
@@ -64,7 +67,8 @@ define([
                 this.$bufferItem.prependTo(this.$el);
             }
 
-            this.$el.find('#buffer').css('height', first * this.rowHeight);
+            this.bufferHeight = first * this.rowHeight;
+            this.$el.find('#buffer').css('height', this.bufferHeight);
         },
         _onScroll: function() {
             var scrollPostion = this.$el.position().top;
@@ -82,12 +86,18 @@ define([
             this._setTopBuffer(0);
             this._setScroller(this.rowHeight * this.data.length);
             this._render(0);
+            this.$container.scrollTop(0);
         },
         destroy: function() {
             this.$container.off();
         },
         remove: function() {
             this.$container.empty().off();
+        },
+        info: function() {
+            return {
+                scrollTop: this.bufferHeight,
+            }
         }
     });
 
