@@ -34,7 +34,7 @@ define([
             this.$el.height(h);
             this.$container.css('position', 'relative');
         },
-        append: function (first) {
+        append: function (first, direction) {
             var self = this;
             var visibleItems = this.data.slice(first, first + this.buffer);
             var $fragment = $(document.createDocumentFragment());
@@ -50,13 +50,14 @@ define([
             this.current = visibleItems;
             $fragment.appendTo(this.$el);
         },
-        onScroll: function(e) {
+        onScroll: function() {
             var scrollPostion = this.$el.position().top;
+
             this.lastScrollY = (this.lastScrollY) ? this.lastScrollY : 0;
 
-            if (Math.abs(scrollPostion- this.lastScrollY) > this.containerHeight) {
+            if (Math.abs(scrollPostion - this.lastScrollY) > this.containerHeight) {
                 var first = Math.abs(parseInt(scrollPostion / this.rowHeight));
-                this.append(first);
+                this.append(first, (this.lastScrollY > scrollPostion));
                 this.lastScrollY = scrollPostion;
             }
         }
