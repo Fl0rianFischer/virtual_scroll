@@ -27,9 +27,19 @@ define([
                 height: 400
             });
 
-            this.$el.find('#setSource').on('click', function() {
-                console.log('ka')
-                scroller1.setSource(new Transactions(self.demoData(6000)))
+            var sourceBtn = this.$el.find('#setSource');
+            sourceBtn.on('click', function() {
+                scroller1.setSource(new Transactions(self.demoData(6000)));
+            });
+
+            var destroyBtn = this.$el.find('#destroy');
+            destroyBtn.on('click', function() {
+                scroller2.destroy();
+            });
+
+            var removeBtn = this.$el.find('#remove');
+            removeBtn.on('click', function() {
+                scroller2.remove();
             });
 
         },

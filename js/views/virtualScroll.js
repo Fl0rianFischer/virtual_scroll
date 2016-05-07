@@ -82,6 +82,12 @@ define([
             this._setTopBuffer(0);
             this._setScroller(this.rowHeight * this.data.length);
             this._render(0);
+        },
+        destroy: function() {
+            this.$container.off();
+        },
+        remove: function() {
+            this.$container.empty().off();
         }
     });
 
