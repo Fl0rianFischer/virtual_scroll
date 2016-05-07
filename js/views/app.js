@@ -10,8 +10,13 @@ define([
     var App = Backbone.View.extend({
         el: $('#app'),
         initialize: function() {
-            this.data = new Transactions(this.demoData());
-            new VirtualScroll(this.$el, this.data)
+            var data = new Transactions(this.demoData());
+            var $scroller = this.$el.find('#scroller1');
+            new VirtualScroll({
+                container: $scroller, 
+                data: data,
+                rowHeight: 25
+            });
         },
         demoData: function() {
             var list = [];
