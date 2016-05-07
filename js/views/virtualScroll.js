@@ -17,7 +17,7 @@ define([
             this.containerWidth = config.width || this.$container.width();
             this.rowHeight = config.rowHeight || 25;
             this.rowsPerScreen = Math.round(this.containerHeight / this.rowHeight);
-            this.buffer = this.rowsPerScreen * 3;
+            this.buffer = this.rowsPerScreen + 3;
 
             this._setTopBuffer(0);
             this._setScroller(this.rowHeight * this.data.length)
@@ -42,7 +42,7 @@ define([
 
             _.each(toRemove, function(item) {
                 self.$el.find('#' + item.attributes.itemId).remove();
-            })
+            });
 
             _.each(toAdd, function(item, i) {
                 var $item = $(new ListItem({model: item}).render().el);
@@ -52,11 +52,7 @@ define([
 
             this.current = visibleItems;
 
-            if (direction) {
-                $fragment.appendTo(this.$el) 
-            } else {
-                $fragment.insertAfter(this.$el.find('#buffer'));
-            }
+            (direction) ? $fragment.appendTo(this.$el) : $fragment.insertAfter(this.$el.find('#buffer'));
 
             this._setTopBuffer(first);
         },
@@ -73,7 +69,7 @@ define([
 
             this.lastScrollY = (this.lastScrollY) ? this.lastScrollY : 0;
 
-            if (Math.abs(scrollPostion - this.lastScrollY) > this.containerHeight) {
+            if (Math.abs(scrollPostion - this.lastScrollY)) {
                 var first = Math.abs(parseInt(scrollPostion / this.rowHeight));
                 this.render(first, (this.lastScrollY > scrollPostion));
                 this.lastScrollY = scrollPostion;
