@@ -9,12 +9,12 @@ body {
   background-color: white;
 }
 
-#scroller1 {
+.scroller {
+  display: inline-block;
   width: 200px;
   height: 200px;
-  margin: 0 auto;
   overflow-y: auto;
-  display: block;
+  vertical-align: top;
   background: grey;
 }
 

@@ -13,17 +13,17 @@ define([
 
             this.$container = config.container;
             this.data = config.data;
-            this.containerHeight = config.height || this.$container.height();
-            this.containerWidth = config.width || this.$container.width();
+            this.containerHeight = config.height;
+            this.containerWidth = config.width;
             this.rowHeight = config.rowHeight || 25;
             this.rowsPerScreen = Math.round(this.containerHeight / this.rowHeight);
             this.buffer = this.rowsPerScreen + 3;
 
             this._setTopBuffer(0);
             this._setScroller(this.rowHeight * this.data.length)
-            this.render(0);
+            this._render(0);
 
-            this.$container.on('scroll', this.onScroll.bind(this));
+            this.$container.on('scroll', this._onScroll.bind(this));
 
             this.$container.append(this.$el);
         },
@@ -31,8 +31,10 @@ define([
             // Virtual height      
             this.$el.height(h);
             this.$container.css('position', 'relative');
+            (this.containerHeight) ? this.$container.height(this.containerHeight) : '';
+            (this.$container.width) ? this.$container.width(this.containerWidth) : '';
         },
-        render: function (first, direction) {
+        _render: function (first, direction) {
             var self = this;
             var visibleItems = this.data.slice(first, first + this.buffer);
             var $fragment = $(document.createDocumentFragment());
@@ -64,16 +66,22 @@ define([
 
             this.$el.find('#buffer').css('height', first * this.rowHeight);
         },
-        onScroll: function() {
+        _onScroll: function() {
             var scrollPostion = this.$el.position().top;
 
             this.lastScrollY = (this.lastScrollY) ? this.lastScrollY : 0;
 
             if (Math.abs(scrollPostion - this.lastScrollY)) {
                 var first = Math.abs(parseInt(scrollPostion / this.rowHeight));
-                this.render(first, (this.lastScrollY > scrollPostion));
+                this._render(first, (this.lastScrollY > scrollPostion));
                 this.lastScrollY = scrollPostion;
             }
+        },
+        setSource: function(newData) {
+            this.data = newData;
+            this._setTopBuffer(0);
+            this._setScroller(this.rowHeight * this.data.length);
+            this._render(0);
         }
     });
 
