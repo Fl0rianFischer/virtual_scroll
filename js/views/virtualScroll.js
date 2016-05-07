@@ -18,37 +18,55 @@ define([
             this.rowHeight = config.rowHeight || 25;
             this.rowsPerScreen = Math.round(this.containerHeight / this.rowHeight);
             this.buffer = this.rowsPerScreen * 3;
-            this.bufferLength = this.buffer * this.rowHeight;
 
-            this.setScroller(this.rowHeight * this.data.length)
-            this.append(0);
+            this._setTopBuffer(0);
+            this._setScroller(this.rowHeight * this.data.length)
+            this.render(0);
 
             this.$container.on('scroll', this.onScroll.bind(this));
 
             this.$container.append(this.$el);
-
-            this.lastScrollY;
         },
-        setScroller: function(h) {
+        _setScroller: function(h) {
             // Virtual height      
             this.$el.height(h);
             this.$container.css('position', 'relative');
         },
-        append: function (first, direction) {
+        render: function (first, direction) {
             var self = this;
             var visibleItems = this.data.slice(first, first + this.buffer);
             var $fragment = $(document.createDocumentFragment());
 
-            var diff = (this.current) ? _.difference(visibleItems, this.current) : visibleItems;
-            
-            _.each(diff, function(listItem, i) {
-                var $item = $(new ListItem({model: listItem}).render().el);
+            var toAdd = (this.current) ? _.difference(visibleItems, this.current) : visibleItems;
+            var toRemove = _.difference(this.current, visibleItems);
+
+            _.each(toRemove, function(item) {
+                self.$el.find('#' + item.attributes.itemId).remove();
+            })
+
+            _.each(toAdd, function(item, i) {
+                var $item = $(new ListItem({model: item}).render().el);
                 $item.height(self.rowHeight);
                 $fragment.append($item)
             });
 
             this.current = visibleItems;
-            $fragment.appendTo(this.$el);
+
+            if (direction) {
+                $fragment.appendTo(this.$el) 
+            } else {
+                $fragment.insertAfter(this.$el.find('#buffer'));
+            }
+
+            this._setTopBuffer(first);
+        },
+        _setTopBuffer: function(first) {
+            if (!this.$bufferItem) {
+                this.$bufferItem = $('<div id="buffer"></div>');
+                this.$bufferItem.prependTo(this.$el);
+            }
+
+            this.$el.find('#buffer').css('height', first * this.rowHeight);
         },
         onScroll: function() {
             var scrollPostion = this.$el.position().top;
@@ -57,7 +75,7 @@ define([
 
             if (Math.abs(scrollPostion - this.lastScrollY) > this.containerHeight) {
                 var first = Math.abs(parseInt(scrollPostion / this.rowHeight));
-                this.append(first, (this.lastScrollY > scrollPostion));
+                this.render(first, (this.lastScrollY > scrollPostion));
                 this.lastScrollY = scrollPostion;
             }
         }
