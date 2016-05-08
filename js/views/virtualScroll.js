@@ -9,12 +9,12 @@ define([
     /**
     * FUNCTION constructing a new instance of VirtualScroll
     *
-    * @param  {object}  config          object holding all parameters
-    * @param  {object}  container       jQuery object that is the parent elment of the scroller
-    * @param  {object}  data            data source to be rendered in scroller
-    * @param  {number}  height          height of container element, set if specified
-    * @param  {number}  width           width of container element, set if specified
-    * @param  {number}  rowHeight       height of each list item
+    * @param  {Object}  config          object holding all parameters
+    * @param  {Object}  container       jQuery object that is the parent elment of the scroller
+    * @param  {Object}  data            data source to be rendered in scroller
+    * @param  {Number}  height          height of container element, set if specified
+    * @param  {Number}  width           width of container element, set if specified
+    * @param  {Number}  rowHeight       height of each list item
     */
     var VirtualScroll = Backbone.View.extend({
         tagName: 'ul',
@@ -52,7 +52,7 @@ define([
         /**
         * FUNCTION for initial rendering and updating with _onScroll function
         *
-        * @param  {object}  first           first currently visible item in list
+        * @param  {Object}  first           first currently visible item in list
         * @param  {Boolean} direction       scroll direction: true if scrolling down, false if up
         *
         */
@@ -84,7 +84,7 @@ define([
         * FUNCTION creates a buffer element at the top of the scroller. 
         * Updates height of buffer according to scroll position.
         *
-        * @param  {object}  first first currently visible item in list     
+        * @param  {Object}  first first currently visible item in list     
         *   
         */
         _setTopBuffer: function(first) {
@@ -104,11 +104,11 @@ define([
         */
         _onScroll: function() {
             var scrollPostion = this.$el.position().top;
+            var first = Math.abs(parseInt(scrollPostion / this.rowHeight));     // calculate first visisble item in scroller
 
             this.lastScrollY = (this.lastScrollY) ? this.lastScrollY : 0;
             this.scrollingDown = this.lastScrollY > scrollPostion;
 
-            var first = Math.abs(parseInt(scrollPostion / this.rowHeight));     // calculate first visisble item in scroller
             this._render(first, this.scrollingDown);
             this.lastScrollY = scrollPostion;                                   // save reference to compare with scroll position at nex call        
         },
@@ -123,7 +123,7 @@ define([
             this.$container.off();
         },
         remove: function() {
-            this.$container.empty().off();
+            this.$container.empty().off().removeAttr('style');
         },
         // I couldn't get isScrolling to work here
         info: function() {
