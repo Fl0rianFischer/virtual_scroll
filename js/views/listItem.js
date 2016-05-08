@@ -2,7 +2,7 @@ define([
     'jquery',
     'underscore',
     'backbone'
-], function($, _, Backbone, itemTemplate) {
+], function($, _, Backbone) {
     'use strict';
 
     var ListItem = Backbone.View.extend({
